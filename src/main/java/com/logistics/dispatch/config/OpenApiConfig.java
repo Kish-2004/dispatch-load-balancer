@@ -1,8 +1,9 @@
 
 package com.logistics.dispatch.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,13 +13,16 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public GlobalOpenApiCustomizer railwayServerUrlCustomizer() {
-        return openApi -> openApi.setServers(
-            List.of(
-                new Server()
-                    .url("https://dispatch-load-balancer-production-d54b7633.up.railway.app")
-                    .description("Railway Production Server")
-            )
-        );
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Dispatch Load Balancer API")
+                        .version("1.0.0")
+                        .description("Priority-aware delivery dispatch and route optimization API"))
+                .servers(List.of(
+                        new Server()
+                                .url("https://dispatch-load-balancer-production-d54b7633.up.railway.app")
+                                .description("Railway Production Server")
+                ));
     }
 }
