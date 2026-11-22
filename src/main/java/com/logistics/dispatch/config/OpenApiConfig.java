@@ -12,7 +12,7 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public OpenApiCustomizer railwayServerCustomizer() {
+    public OpenApiCustomizer railwayServerUrlCustomizer() {
         return openApi -> openApi.setServers(
                 List.of(
                         new Server()
