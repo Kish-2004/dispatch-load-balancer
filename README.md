@@ -74,7 +74,6 @@ The implementation uses a greedy heuristic. It aims to fulfill higher-priority o
 ```text
 dispatch-load-balancer/
 │
-├── .github/
 ├── .mvn/
 ├── src/
 │   ├── main/

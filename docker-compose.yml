@@ -1,23 +1,18 @@
-
 services:
   postgres:
     image: postgres:17
     container_name: dispatch-postgres
     restart: unless-stopped
-
     environment:
-      POSTGRES_DB: dispatch_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "mcd@123$"
-
+      POSTGRES_DB: ${POSTGRES_DB:-dispatch_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
       - "5432:5432"
-
     volumes:
       - dispatch_postgres_data:/var/lib/postgresql/data
-
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d dispatch_db"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,15 +21,12 @@ services:
     build: .
     container_name: dispatch-load-balancer
     restart: unless-stopped
-
     ports:
       - "8080:8080"
-
     environment:
-      DB_URL: jdbc:postgresql://postgres:5432/dispatch_db
-      DB_USERNAME: postgres
-      DB_PASSWORD: "mcd@123$"
-
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-dispatch_db}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     depends_on:
       postgres:
         condition: service_healthy
